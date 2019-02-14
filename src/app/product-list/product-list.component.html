@@ -8,7 +8,7 @@
 				<input [formControl]="searchProduct" type="text" class="form-control" placeholder="search" aria-label="search" aria-describedby="basic-addon1">
 			</div>
   <div
-    *ngFor="let product of productListService.productList"
+    *ngFor="let product of (productList$ | async)"
     class="col-3 d-flex flex-column"
   >
     <img [src]="product.img" class="img-fluid" />

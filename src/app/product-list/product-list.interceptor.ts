@@ -73,6 +73,15 @@ export class FakeBackendInterceptor implements HttpInterceptor {
 				// 	return throwError({error: {message: 'Username or password is incorrect'}});
 				// }
 			}
+			if (request.url.includes('/products?') && request.method === 'GET') {
+				const q = request.url.split('?q=')[1];
+				const filterResponse = mockResponse.filter(product => product.name.toLowerCase().includes(q.toLocaleLowerCase()));
+				return of(new HttpResponse({status: 200, body: filterResponse}));
+			// } else {
+			// 	// else return 400 bad request
+			// 	return throwError({error: {message: 'Username or password is incorrect'}});
+			// }
+		}
 			// pass through any requests not handled above
 			return next.handle(request);
 

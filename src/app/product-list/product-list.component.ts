@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { ProductListService } from './product-list.service';
+import { ProductListService, Product } from './product-list.service';
 import { FormControl } from '@angular/forms';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-product-list',
@@ -10,7 +11,9 @@ import { FormControl } from '@angular/forms';
 export class ProductListComponent implements OnInit {
 
 	public searchProduct: FormControl = new FormControl('');
-  constructor(public productListService: ProductListService) {
+	public productList$: Observable<Product[]>;
+  constructor(private productListService: ProductListService) {
+		this.productList$ = this.productListService.productList$;
 		this.searchProduct.valueChanges.subscribe(value => this.productListService.filterProductList(value));
 	}
 
