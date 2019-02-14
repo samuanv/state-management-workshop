@@ -1,6 +1,11 @@
-import { Injectable, ɵConsole } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
+export interface Product {
+	name: string;
+	img: string;
+	price: string;
+}
 @Injectable({
   providedIn: 'root'
 })
@@ -8,6 +13,7 @@ export class ProductListService {
 
 	public productList;
 	private localProductList;
+
 	constructor(private httpClient: HttpClient) {}
 
 	public getProductList(): void {
@@ -17,6 +23,7 @@ export class ProductListService {
 		});
 	}
 	public filterProductList(term: string) {
-		this.productList = this.localProductList.filter(product => product.name.toLowerCase().includes(term.toLowerCase()));
+			this.httpClient.get<Product[]>('localhost:3000/products?q=' + term)
+			.pipe(debounceTime(5000)).subscribe(products => this.productList = products);
 	}
 }
