@@ -1,0 +1,11 @@
+<div class="text-center pt-4">PRODUCTS AVAILABLE</div>
+<div class="row m-5 p-4 text-center">
+  <div
+    *ngFor="let product of productListService.productList"
+    class="col-3 d-flex flex-column"
+  >
+    <img [src]="product.img" class="img-fluid" />
+    <span>{{ product.name }}</span>
+    <span>{{ product.price }}</span>
+  </div>
+</div>
