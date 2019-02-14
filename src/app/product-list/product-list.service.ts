@@ -11,13 +11,13 @@ export interface Product {
 })
 export class ProductListService {
 
-	public productList;
-	private localProductList;
+	public productList: Product[];
+	private localProductList: Product[];
 
 	constructor(private httpClient: HttpClient) {}
 
 	public getProductList(): void {
-		this.httpClient.get('localhost:3000/products').subscribe(response => {
+		this.httpClient.get<Product[]>('localhost:3000/products').subscribe(response => {
 			this.localProductList = response;
 			this.productList = this.localProductList;
 		});
