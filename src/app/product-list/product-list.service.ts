@@ -7,27 +7,22 @@ export interface Product {
 	img: string;
 	price: string;
 }
+export class State {
+	products: Product[] = [];
+	searchTerm = '';
+}
 @Injectable({
   providedIn: 'root'
 })
 export class ProductListService {
 
-	public _productList$: BehaviorSubject<Product[]> = new BehaviorSubject(JSON.parse(localStorage.getItem('productList')));
-	get productList$(): Observable<Product[]> {
-		return this._productList$.asObservable();
-	}
 	constructor(private httpClient: HttpClient) {
-
-		this._productList$.subscribe(products => {
-			localStorage.setItem('productList', JSON.stringify(products));
-		});
 	}
 
-	public getProductList(): void {
-		this.httpClient.get<Product[]>('localhost:3000/products').subscribe(products => this._productList$.next(products));
+	public getProductList(): Observable<Product[]> {
+		return this.httpClient.get<Product[]>('localhost:3000/products');
 	}
-	public filterProductList(term: string) {
-		this.httpClient.get<Product[]>('localhost:3000/products?q=' + term)
-		.pipe(debounceTime(5000)).subscribe(products => this._productList$.next(products));
+	public filterProductList(term: string): Observable<Product[]> {
+		return this.httpClient.get<Product[]>('localhost:3000/products?q=' + term);
 	}
 }
