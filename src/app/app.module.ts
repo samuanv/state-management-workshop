@@ -7,7 +7,6 @@ import { fakeBackendProvider } from './product-list/product-list.interceptor';
 import { HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
-
 @NgModule({
    declarations: [
       AppComponent,

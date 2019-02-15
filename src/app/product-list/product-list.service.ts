@@ -1,7 +1,8 @@
 import { Injectable, ɵConsole } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
-import { map, debounceTime } from 'rxjs/operators';
+import { map, debounceTime, tap } from 'rxjs/operators';
+import { ProductListStore } from '../state/product-list/product-list.store';
 export interface Product {
 	name: string;
 	img: string;
@@ -16,13 +17,31 @@ export class State {
 })
 export class ProductListService {
 
-	constructor(private httpClient: HttpClient) {
+	constructor(private httpClient: HttpClient, private productListStore: ProductListStore) {
 	}
 
-	public getProductList(): Observable<Product[]> {
-		return this.httpClient.get<Product[]>('localhost:3000/products');
+	public getProductList(): void {
+		this.httpClient.get<Product[]>('localhost:3000/products').subscribe((products: Product[]) => {
+			this.productListStore.update(state => (
+				{
+					...state,
+					products
+				}
+			));
+		});
 	}
-	public filterProductList(term: string): Observable<Product[]> {
-		return this.httpClient.get<Product[]>('localhost:3000/products?q=' + term);
+	public filterProductList(term: string): void {
+		this.productListStore.update(state => ({
+			...state,
+			searchTerm: term
+		}));
+		this.httpClient.get<Product[]>('localhost:3000/products?q=' + term).subscribe((products: Product[]) => {
+			this.productListStore.update(state => (
+				{
+					...state,
+					products
+				}
+			));
+		});
 	}
 }
